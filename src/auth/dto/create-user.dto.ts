@@ -37,7 +37,7 @@ export class CreateUserDto {
   @IsNotEmpty()
   @IsString()
   @Matches(/^[0-9]{10,15}$/, {
-    message: 'Phone number must be between 10 and 15 digits',
+    message: 'El numero debe tener una longitud de 10 a 15 caracteres.',
   })
   phone: string;
 
