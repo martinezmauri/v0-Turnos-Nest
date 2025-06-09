@@ -18,6 +18,11 @@ import { SearchBusinessDto } from './dto/search-business.dto';
 export class BusinessController {
   constructor(private readonly businessService: BusinessService) {}
 
+  @Get()
+  findAll(): Promise<Business[]> {
+    return this.businessService.findAll();
+  }
+
   @Get('search')
   search(@Query() filters: SearchBusinessDto): Promise<Business[]> {
     return this.businessService.search(filters);

@@ -18,6 +18,10 @@ export class BusinessRepository {
     private readonly categoryRepository: Repository<Category>,
   ) {}
 
+  async findAll(): Promise<Business[]> {
+    return await this.businessRepository.find();
+  }
+
   async create(createBusinessDto: CreateBusinessDto): Promise<Business> {
     const { address, businessHours, userId, categoryId, ...rest } =
       createBusinessDto;

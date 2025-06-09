@@ -8,6 +8,10 @@ import { SearchBusinessDto } from './dto/search-business.dto';
 export class BusinessService {
   constructor(private readonly businessRepository: BusinessRepository) {}
 
+  async findAll(): Promise<Business[]> {
+    return this.businessRepository.findAll();
+  }
+
   async create(createBusinessDto: CreateBusinessDto): Promise<Business> {
     return await this.businessRepository.create(createBusinessDto);
   }
