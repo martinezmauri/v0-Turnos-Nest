@@ -22,6 +22,9 @@ export class User {
 
   @Column({ type: 'varchar', nullable: false, unique: true })
   email: string;
+  /*Guardamos el avatar generado con ui-avatars*/
+  @Column({ type: 'varchar', nullable: true })
+  avatar_url: string;
 
   @Column({
     type: 'enum',

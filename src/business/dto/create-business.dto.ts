@@ -15,7 +15,7 @@ export class CreateBusinessDto {
   name: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   description: string;
 
   @IsString()

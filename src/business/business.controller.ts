@@ -23,6 +23,11 @@ export class BusinessController {
     return this.businessService.findAll();
   }
 
+  @Get(':id')
+  findOne(@Param('id') id: string): Promise<Business> {
+    return this.businessService.findOne(id);
+  }
+
   @Get('search')
   search(@Query() filters: SearchBusinessDto): Promise<Business[]> {
     return this.businessService.search(filters);

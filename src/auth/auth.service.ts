@@ -7,6 +7,8 @@ import * as bcrypt from 'bcrypt';
 import { Rol } from 'src/users/enum/Rol.enum';
 import { CreateUserDto } from './dto/create-user.dto';
 import { plainToInstance } from 'class-transformer';
+import { generateAvatarUrl } from 'src/utils/generate-avatar';
+import { UserResponseDto } from './dto/user-response.dto';
 
 @Injectable()
 export class AuthService {
@@ -30,12 +32,13 @@ export class AuthService {
     }
 
     const rol: Rol = userFound.role;
-    const user = {
+    const payload = {
       id: userFound.id,
       email: userFound.email,
       rol: rol,
+      avatar_url: userFound.avatar_url,
     };
-    const token = this.jwtService.sign(user);
+    const token = this.jwtService.sign(payload);
     return {
       id: userFound.id,
       token,
@@ -56,15 +59,18 @@ export class AuthService {
     if (createUser.password !== createUser.confirmPassword) {
       throw new BadRequestException('Las contraseñas deben coincidir.');
     }
-    const passwordHashed = await bcrypt.hash(createUser.password, 10);
 
+    const passwordHashed = await bcrypt.hash(createUser.password, 10);
     if (!passwordHashed) throw new BadRequestException('Error interno.');
+
+    const avatarUrl = generateAvatarUrl(createUser.name);
 
     const userCreated = await this.userRepository.createUser({
       ...createUser,
       password: passwordHashed,
+      avatar_url: avatarUrl,
     });
 
-    return plainToInstance(User, userCreated);
+    return plainToInstance(UserResponseDto, userCreated);
   }
 }

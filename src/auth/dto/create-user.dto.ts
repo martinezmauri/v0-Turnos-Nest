@@ -45,4 +45,8 @@ export class CreateUserDto {
   @IsOptional()
   @IsEnum(Rol)
   role: Rol;
+
+  @IsOptional()
+  @IsString()
+  avatar_url: string;
 }

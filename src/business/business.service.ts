@@ -12,6 +12,10 @@ export class BusinessService {
     return this.businessRepository.findAll();
   }
 
+  async findOne(id: string): Promise<Business> {
+    return this.businessRepository.findOne(id);
+  }
+
   async create(createBusinessDto: CreateBusinessDto): Promise<Business> {
     return await this.businessRepository.create(createBusinessDto);
   }

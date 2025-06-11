@@ -19,7 +19,34 @@ export class BusinessRepository {
   ) {}
 
   async findAll(): Promise<Business[]> {
-    return await this.businessRepository.find();
+    return await this.businessRepository.find({
+      relations: [
+        'services',
+        'employees',
+        'address',
+        'category',
+        'businessHours',
+      ],
+    });
+  }
+
+  async findOne(id: string): Promise<Business> {
+    const business = await this.businessRepository.findOne({
+      where: { id },
+      relations: [
+        'services',
+        'employees',
+        'employees.services',
+        'employees.employeeHours',
+        'address',
+        'category',
+        'businessHours',
+      ],
+    });
+    if (!business) {
+      throw new NotFoundException(`No existe un negocio con el id ${id}}`);
+    }
+    return business;
   }
 
   async create(createBusinessDto: CreateBusinessDto): Promise<Business> {
