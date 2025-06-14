@@ -1,4 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { DeepPartial } from 'typeorm';
+import { BusinessHour } from 'src/business-hours/entities/business-hour.entity';
 import { Business } from './entities/business.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -64,10 +66,21 @@ export class BusinessRepository {
       throw new NotFoundException('La categoria no fue encontrada.');
     }
 
+    // Normaliza las propiedades vacías de businessHours
+    const normalizedBusinessHours: DeepPartial<BusinessHour>[] = (
+      businessHours || []
+    ).map((bh) => ({
+      ...bh,
+      opening_evening_time:
+        bh.opening_evening_time === '' ? undefined : bh.opening_evening_time,
+      closing_evening_time:
+        bh.closing_evening_time === '' ? undefined : bh.closing_evening_time,
+    }));
+
     const business = await this.businessRepository.create({
       ...rest,
       address, // Esto con cascade:true en la entidad permite la creacion del address
-      businessHours,
+      businessHours: normalizedBusinessHours,
       user: { id: userId },
       category: { id: categoryId },
     });

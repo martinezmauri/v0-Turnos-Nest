@@ -7,6 +7,7 @@ import { Service } from 'src/service/entities/service.entity';
 import { UpdateEmployeeDto } from './dto/update-employee.dto';
 import { EmployeeHour } from 'src/employee-hours/entities/employee-hour.entity';
 import { Business } from 'src/business/entities/business.entity';
+import { generateAvatarUrl } from 'src/utils/generate-avatar';
 
 export class EmployeeRepository {
   constructor(
@@ -40,12 +41,14 @@ export class EmployeeRepository {
     if (services.length !== servicesIds.length) {
       throw new NotFoundException('Uno o más servicios no fueron encontrados.');
     }
+    const profile_picture = generateAvatarUrl(employeeData.name);
 
     const employee = this.employeeRepository.create({
       ...employeeData,
       business,
       services,
       employeeHours,
+      profile_picture,
     });
 
     return await this.employeeRepository.save(employee);
@@ -55,6 +58,13 @@ export class EmployeeRepository {
     return await this.employeeRepository.find({
       where: { business: { id: businessId } },
       relations: ['services', 'employeeHours'],
+    });
+  }
+
+  async findByUserId(userId: string): Promise<Employee[]> {
+    return await this.employeeRepository.find({
+      where: { business: { user: { id: userId } } },
+      relations: ['services', 'employeeHours', 'business'],
     });
   }
 

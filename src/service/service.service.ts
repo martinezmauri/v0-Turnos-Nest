@@ -16,6 +16,10 @@ export class ServiceService {
     return await this.serviceRepository.findByBusinessId(businessId);
   }
 
+  async findByUserId(userId: string): Promise<Service[]> {
+    return await this.serviceRepository.findByUserId(userId);
+  }
+
   async findOne(id: string): Promise<Service> {
     return await this.serviceRepository.findOne(id);
   }

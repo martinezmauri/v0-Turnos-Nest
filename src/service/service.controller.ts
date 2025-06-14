@@ -12,7 +12,6 @@ import { ServiceService } from './service.service';
 import { CreateServiceDto } from './dto/create-service.dto';
 import { UpdateServiceDto } from './dto/update-service.dto';
 import { Service } from './entities/service.entity';
-import { ServiceRepository } from './service.repository';
 
 @Controller('service')
 export class ServiceController {
@@ -26,6 +25,11 @@ export class ServiceController {
   @Get('business/:businessId')
   findByBusiness(@Param('businessId') businessId: string): Promise<Service[]> {
     return this.serviceService.findByBusinessId(businessId);
+  }
+
+  @Get('user/:userId')
+  findByUser(@Param('userId') userId: string): Promise<Service[]> {
+    return this.serviceService.findByUserId(userId);
   }
 
   @Get(':id')

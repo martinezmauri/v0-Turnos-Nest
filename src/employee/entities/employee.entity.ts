@@ -21,7 +21,7 @@ export class Employee {
   @Column({ length: 100 })
   name: string;
 
-  @Column({ nullable: true })
+  @Column({ type: 'varchar', nullable: true })
   profile_picture: string;
 
   @Column({ unique: true })

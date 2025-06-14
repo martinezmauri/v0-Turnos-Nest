@@ -22,8 +22,15 @@ export class EmployeeController {
   }
 
   @Get('/business/:businessId')
-  findByBusinessId(@Param('id') businessId: string): Promise<Employee[]> {
+  findByBusinessId(
+    @Param('businessId') businessId: string,
+  ): Promise<Employee[]> {
     return this.employeeService.findByBusinessId(businessId);
+  }
+
+  @Get('/user/:userId')
+  findByUserId(@Param('userId') userId: string): Promise<Employee[]> {
+    return this.employeeService.findByUserId(userId);
   }
 
   @Get(':id')

@@ -15,6 +15,10 @@ export class EmployeeService {
     return await this.employeeRepository.findByBusinessId(businessId);
   }
 
+  async findByUserId(userId: string): Promise<Employee[]> {
+    return await this.employeeRepository.findByUserId(userId);
+  }
+
   async findOne(id: string): Promise<Employee> {
     return await this.employeeRepository.findOne(id);
   }

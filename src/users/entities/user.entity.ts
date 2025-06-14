@@ -33,6 +33,7 @@ export class User {
   })
   role: Rol;
 
+  /* unotoone */
   @OneToMany(() => Business, (b) => b.user, { cascade: true })
   businesses: Business[];
 

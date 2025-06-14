@@ -37,6 +37,12 @@ export class ServiceRepository {
     });
   }
 
+  async findByUserId(userId: string): Promise<Service[]> {
+    return await this.serviceRepository.find({
+      where: { business: { user: { id: userId } } },
+    });
+  }
+
   async findOne(id: string) {
     const service = await this.serviceRepository.findOneBy({ id });
 

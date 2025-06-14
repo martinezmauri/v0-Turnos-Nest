@@ -4,6 +4,7 @@ import {
   IsOptional,
   IsString,
   Matches,
+  ValidateIf,
 } from 'class-validator';
 import { DaysOfWeek } from '../enum/DaysOfWeek.enum';
 
@@ -27,6 +28,7 @@ export class CreateBusinessHourDto {
   @IsNotEmpty()
   closing_morning_time: string;
 
+  @ValidateIf((o) => o.opening_evening_time !== '')
   @IsString()
   @Matches(TIME_REGEX, {
     message: 'opening_evening_time debe tener formato HH:mm',
@@ -34,6 +36,7 @@ export class CreateBusinessHourDto {
   @IsOptional()
   opening_evening_time?: string;
 
+  @ValidateIf((o) => o.closing_evening_time !== '')
   @IsString()
   @Matches(TIME_REGEX, {
     message: 'closing_evening_time debe tener formato HH:mm',
