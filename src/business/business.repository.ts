@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { DeepPartial } from 'typeorm';
 import { BusinessHour } from 'src/business-hours/entities/business-hour.entity';
 import { Business } from './entities/business.entity';
@@ -59,6 +63,16 @@ export class BusinessRepository {
     if (!user) {
       throw new NotFoundException('El usuario no fue encontrado.');
     }
+
+    const existingBusiness = await this.businessRepository.findOne({
+      where: { user: { id: userId } },
+    });
+
+    if (existingBusiness) {
+      throw new BadRequestException(
+        'El usuario ya tiene un negocio registrado.',
+      );
+    }
     const category = await this.categoryRepository.findOne({
       where: { id: categoryId },
     });
@@ -84,6 +98,7 @@ export class BusinessRepository {
       user: { id: userId },
       category: { id: categoryId },
     });
+
     return await this.businessRepository.save(business);
   }
 

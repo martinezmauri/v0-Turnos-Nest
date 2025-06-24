@@ -24,6 +24,7 @@ export class AuthService {
     if (!userFound) {
       throw new BadRequestException('Usuario y/o contraseña incorrecta.');
     }
+    const businessId = userFound.business ? userFound.business.id : null;
 
     const result = await bcrypt.compare(password, userFound.password);
 
@@ -37,6 +38,7 @@ export class AuthService {
       email: userFound.email,
       rol: rol,
       avatar_url: userFound.avatar_url,
+      businessId,
     };
     const token = this.jwtService.sign(payload);
     return {
@@ -71,6 +73,7 @@ export class AuthService {
       avatar_url: avatarUrl,
     });
 
-    return plainToInstance(UserResponseDto, userCreated);
+    const { password, ...userWithoutPassword } = userCreated;
+    return userWithoutPassword;
   }
 }

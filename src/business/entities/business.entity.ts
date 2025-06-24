@@ -40,8 +40,8 @@ export class Business {
   @JoinColumn()
   address: Address;
 
-  /* onetoone joincolum */
-  @ManyToOne(() => User, (user) => user.businesses)
+  @OneToOne(() => User, (user) => user.business)
+  @JoinColumn()
   user: User;
 
   @ManyToOne(() => Category, (category) => category.businesses)

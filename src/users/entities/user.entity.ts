@@ -1,4 +1,11 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Rol } from '../enum/Rol.enum';
 import { Business } from 'src/business/entities/business.entity';
 import { Appointment } from 'src/appointment/entities/appointment.entity';
@@ -33,9 +40,8 @@ export class User {
   })
   role: Rol;
 
-  /* unotoone */
-  @OneToMany(() => Business, (b) => b.user, { cascade: true })
-  businesses: Business[];
+  @OneToOne(() => Business, (b) => b.user, { cascade: true })
+  business: Business;
 
   @OneToMany(() => Appointment, (a) => a.user)
   appointments: Appointment[];
