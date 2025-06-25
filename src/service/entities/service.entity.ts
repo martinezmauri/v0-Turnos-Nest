@@ -21,7 +21,7 @@ export class Service {
   @Column()
   duration: number;
 
-  @Column()
+  @Column({ type: 'text', nullable: true, default: '' })
   description: string;
 
   @Column({ type: 'decimal' })

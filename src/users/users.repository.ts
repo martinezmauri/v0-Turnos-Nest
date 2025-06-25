@@ -40,6 +40,10 @@ export class UsersRepository {
     return user;
   }
 
+  async findOneByPhone(phone: string): Promise<User | null> {
+    return this.userRepository.findOneBy({ phone });
+  }
+
   async createUser(user: CreateUserDto): Promise<User> {
     const existingUser = await this.findOneByEmail(user.email);
 

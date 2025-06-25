@@ -58,6 +58,15 @@ export class AuthService {
       );
     }
 
+    const foundPhone = await this.userRepository.findOneByPhone(
+      createUser.phone,
+    );
+    if (foundPhone) {
+      throw new BadRequestException(
+        'Ya existe una cuenta registrada con ese número de teléfono.',
+      );
+    }
+
     if (createUser.password !== createUser.confirmPassword) {
       throw new BadRequestException('Las contraseñas deben coincidir.');
     }
@@ -73,7 +82,18 @@ export class AuthService {
       avatar_url: avatarUrl,
     });
 
-    const { password, ...userWithoutPassword } = userCreated;
-    return userWithoutPassword;
+    const payload = {
+      id: userCreated.id,
+      email: userCreated.email,
+      rol: userCreated.role,
+      avatar_url: userCreated.avatar_url,
+      businessId: null,
+    };
+    const token = this.jwtService.sign(payload);
+
+    return {
+      id: userCreated.id,
+      token,
+    };
   }
 }

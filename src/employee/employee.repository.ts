@@ -36,10 +36,17 @@ export class EmployeeRepository {
     }
 
     const services = await this.serviceRepository.find({
-      where: { id: In(servicesIds) },
+      where: {
+        id: In(servicesIds),
+        business: { id: businessId },
+      },
+      relations: ['business'], // necesario si queremos verificar manualmente
     });
+
     if (services.length !== servicesIds.length) {
-      throw new NotFoundException('Uno o más servicios no fueron encontrados.');
+      throw new ConflictException(
+        'Uno o más servicios no pertenecen a este negocio.',
+      );
     }
     const profile_picture = generateAvatarUrl(employeeData.name);
 
