@@ -12,6 +12,7 @@ import { CreateBusinessDto } from './dto/create-business.dto';
 import { User } from 'src/users/entities/user.entity';
 import { Category } from 'src/category/entities/category.entity';
 import { SearchBusinessDto } from './dto/search-business.dto';
+import { AuthService } from 'src/auth/auth.service';
 
 @Injectable()
 export class BusinessRepository {
@@ -22,6 +23,7 @@ export class BusinessRepository {
     private readonly userRepository: Repository<User>,
     @InjectRepository(Category)
     private readonly categoryRepository: Repository<Category>,
+    private readonly authService: AuthService,
   ) {}
 
   async findAll(): Promise<Business[]> {
@@ -55,7 +57,9 @@ export class BusinessRepository {
     return business;
   }
 
-  async create(createBusinessDto: CreateBusinessDto): Promise<Business> {
+  async create(
+    createBusinessDto: CreateBusinessDto,
+  ): Promise<{ business: Business; token: string }> {
     const { address, businessHours, userId, categoryId, ...rest } =
       createBusinessDto;
 
@@ -99,7 +103,22 @@ export class BusinessRepository {
       category: { id: categoryId },
     });
 
-    return await this.businessRepository.save(business);
+    const savedBusiness = await this.businessRepository.save(business);
+
+    const userWithBusiness = await this.userRepository.findOne({
+      where: { id: userId },
+      relations: ['business'], // Asegurate de que 'business' esté en las relaciones
+    });
+
+    if (!userWithBusiness) {
+      throw new NotFoundException('El usuario no fue encontrado.');
+    }
+    const token = this.authService.generateToken(userWithBusiness);
+
+    return {
+      business: savedBusiness,
+      token,
+    };
   }
 
   async search(filters: SearchBusinessDto): Promise<Business[]> {

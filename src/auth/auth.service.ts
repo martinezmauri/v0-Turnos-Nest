@@ -24,7 +24,6 @@ export class AuthService {
     if (!userFound) {
       throw new BadRequestException('Usuario y/o contraseña incorrecta.');
     }
-    const businessId = userFound.business ? userFound.business.id : null;
 
     const result = await bcrypt.compare(password, userFound.password);
 
@@ -32,15 +31,7 @@ export class AuthService {
       throw new BadRequestException('Usuario y/o contraseña incorrecta.');
     }
 
-    const rol: Rol = userFound.role;
-    const payload = {
-      id: userFound.id,
-      email: userFound.email,
-      rol: rol,
-      avatar_url: userFound.avatar_url,
-      businessId,
-    };
-    const token = this.jwtService.sign(payload);
+    const token = this.generateToken(userFound);
     return {
       id: userFound.id,
       token,
@@ -82,18 +73,23 @@ export class AuthService {
       avatar_url: avatarUrl,
     });
 
-    const payload = {
-      id: userCreated.id,
-      email: userCreated.email,
-      rol: userCreated.role,
-      avatar_url: userCreated.avatar_url,
-      businessId: null,
-    };
-    const token = this.jwtService.sign(payload);
+    const token = this.generateToken(userCreated);
 
     return {
       id: userCreated.id,
       token,
     };
+  }
+
+  generateToken(user: User): string {
+    const payload = {
+      id: user.id,
+      email: user.email,
+      rol: user.role,
+      avatar_url: user.avatar_url,
+      businessId: user.business?.id ?? null,
+    };
+
+    return this.jwtService.sign(payload);
   }
 }

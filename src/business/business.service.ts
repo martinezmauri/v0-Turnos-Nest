@@ -16,7 +16,9 @@ export class BusinessService {
     return this.businessRepository.findOne(id);
   }
 
-  async create(createBusinessDto: CreateBusinessDto): Promise<Business> {
+  async create(
+    createBusinessDto: CreateBusinessDto,
+  ): Promise<{ business: Business; token: string }> {
     return await this.businessRepository.create(createBusinessDto);
   }
 

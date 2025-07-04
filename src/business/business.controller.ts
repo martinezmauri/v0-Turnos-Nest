@@ -34,7 +34,9 @@ export class BusinessController {
   }
 
   @Post()
-  create(@Body() createBusinessDto: CreateBusinessDto): Promise<Business> {
+  create(
+    @Body() createBusinessDto: CreateBusinessDto,
+  ): Promise<{ business: Business; token: string }> {
     return this.businessService.create(createBusinessDto);
   }
 }

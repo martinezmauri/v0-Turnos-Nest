@@ -29,7 +29,7 @@ export class UpdateEmployeeDto {
   profile_picture?: string;
 
   @IsOptional()
-  serviceIds?: number[];
+  servicesIds?: number[];
 
   @IsOptional()
   @ValidateNested({ each: true })
